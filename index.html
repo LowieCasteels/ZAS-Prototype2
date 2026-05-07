@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAS Staff Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mock Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <div class="logo">ZAS <span>Connect</span></div>
+            <p>Welcome to the Staff Portal</p>
+            <button class="btn primary" onclick="handleLogin()">Login</button>
+        </div>
+    </div>
+
+    <!-- What's New Modal -->
+    <div id="whats-new-modal" style="display:none;">
+        <div class="modal-box carousel-box">
+            <h2>What's New in ZAS Connect 2.0</h2>
+            <div class="carousel">
+                <div class="slide active">
+                    <div class="slide-placeholder"><img src="img/Updates/UpdateRecord.png" alt=""></div>
+                    <h3>Updated Patient Directory</h3>
+                    <p>Search and manage patient profiles faster than ever.</p>
+                    <!-- <a class="learn-more-link" onclick="openGuide('guide-directory')">Learn more</a> -->
+                </div>
+                <div class="slide">
+                    <div class="slide-placeholder"><img src="img/Updates/PatientRecord.png" alt=""></div>
+                    <h3>Enhanced Patient Records</h3>
+                    <p>Update and view clinical notes seamlessly.</p>
+                    <!-- <a class="learn-more-link" onclick="openGuide('guide-records')">Learn more</a> -->
+                </div>
+                <div class="slide">
+                    <div class="slide-placeholder"><img src="img/Updates/SecureMessaging.png" alt=""></div>
+                    <h3>Secure Communications</h3>
+                    <p>Exchange data securely with other medical staff.</p>
+                    <!-- <a class="learn-more-link" onclick="openGuide('guide-messaging')">Learn more</a> -->
+                    <p class="extension-tip"><strong>Tip:</strong> The latest updates and guides are also available in the ZAS Connect browser extension!</p>
+                </div>
+                <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+            <div class="slide-indicators">
+                <span class="dot active" onclick="setSlide(0)"></span>
+                <span class="dot" onclick="setSlide(1)"></span>
+                <span class="dot" onclick="setSlide(2)"></span>
+            </div>
+            <div id="read-acknowledgement" style="display:none; margin-top: 15px; text-align: left; font-size: 0.9rem; background: var(--zas-light); padding: 10px; border-radius: 6px;">
+                <input type="checkbox" id="read-checkbox" onchange="toggleContinueBtn()" />
+                <label for="read-checkbox" class="custom-checkbox-label">I have read and understood the updates.</label>
+            </div>
+            <button class="btn primary" id="continue-btn" style="margin-top: 20px;" onclick="closeWhatsNew()" disabled>Continue to Portal</button>
+        </div>
+    </div>
+
+    <!-- Quick Guide Modal -->
+    <div id="quick-guide-modal" style="display:none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; z-index: 2500; backdrop-filter: blur(3px);">
+        <div class="modal-box carousel-box" style="width: 550px;">
+            <h2>Quick Feature Guide</h2>
+            
+            <!-- Guide for Patient Directory -->
+            <div id="modal-guide-directory" style="display:none;">
+                <div class="carousel">
+                    <div class="slide active">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord.png" alt=""></div>
+                        <h3>What's New: Patient Directory</h3>
+                        <p>The Patient Directory has been revamped for faster searching and at-a-glance patient status.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord/step1.png" alt=""></div>
+                        <h3>Step 1 of 5</h3>
+                        <p>Navigate to the <strong>Patient Directory</strong> from the sidebar.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord/step2.png" alt=""></div>
+                        <h3>Step 2 of 5</h3>
+                        <p>Click on the <strong>Search Patient</strong> input field.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord/step3.png" alt=""></div>
+                        <h3>Step 3 of 5</h3>
+                        <p>Type in the patient's Name, ID, or Date of Birth.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord/step4.png" alt=""></div>
+                        <h3>Step 4 of 5</h3>
+                        <p>Click the <strong>Search</strong> button.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/UpdateRecord/step5.png" alt=""></div>
+                        <h3>Step 5 of 5</h3>
+                        <p>Click <strong>View</strong> on the desired patient row to see full details.</p>
+                    </div>
+                    <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+                </div>
+                <div class="slide-indicators">
+                    <span class="dot active" onclick="setSlide(0)"></span>
+                    <span class="dot" onclick="setSlide(1)"></span>
+                    <span class="dot" onclick="setSlide(2)"></span>
+                    <span class="dot" onclick="setSlide(3)"></span>
+                    <span class="dot" onclick="setSlide(4)"></span>
+                    <span class="dot" onclick="setSlide(5)"></span>
+                </div>
+            </div>
+
+            <!-- Guide for Patient Records -->
+            <div id="modal-guide-records" style="display:none;">
+                <div class="carousel">
+                    <div class="slide active">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord.png" alt=""></div>
+                        <h3>What's New: Patient Records</h3>
+                        <p>Adding and updating clinical notes is now more intuitive, with a clear timeline of all updates.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step1.png" alt=""></div>
+                        <h3>Step 1 of 6</h3>
+                        <p>Go to the <strong>Patient Records</strong> section.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step2.png" alt=""></div>
+                        <h3>Step 2 of 6</h3>
+                        <p>Click the <strong>+ Update Record</strong> button at the top right.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step3.png" alt=""></div>
+                        <h3>Step 3 of 6</h3>
+                        <p>Fill in the <strong>Patient ID</strong>.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step4.png" alt=""></div>
+                        <h3>Step 4 of 6</h3>
+                        <p>Select the <strong>Date</strong>, <strong>Hour</strong>, and <strong>Type</strong>.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step5.png" alt=""></div>
+                        <h3>Step 5 of 6</h3>
+                        <p>Add clinical information in the <strong>Notes</strong> field.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/PatientRecord/step6.png" alt=""></div>
+                        <h3>Step 6 of 6</h3>
+                        <p>Click <strong>Save Record</strong>.</p>
+                    </div>
+                    <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+                </div>
+                <div class="slide-indicators">
+                    <span class="dot active" onclick="setSlide(0)"></span>
+                    <span class="dot" onclick="setSlide(1)"></span>
+                    <span class="dot" onclick="setSlide(2)"></span>
+                    <span class="dot" onclick="setSlide(3)"></span>
+                    <span class="dot" onclick="setSlide(4)"></span>
+                    <span class="dot" onclick="setSlide(5)"></span>
+                    <span class="dot" onclick="setSlide(6)"></span>
+                </div>
+            </div>
+
+            <!-- Guide for Secure Communications -->
+            <div id="modal-guide-messages" style="display:none;">
+                <div class="carousel">
+                    <div class="slide active">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging.png" alt=""></div>
+                        <h3>What's New: Secure Communications</h3>
+                        <p>Exchange data securely with other medical staff without leaving the portal.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging/step1.png" alt=""></div>
+                        <h3>Step 1 of 5</h3>
+                        <p>Open the <strong>Secure Communications</strong> tab.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging/step2.png" alt=""></div>
+                        <h3>Step 2 of 5</h3>
+                        <p>Click the <strong>New Message</strong> button at the bottom.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging/step3.png" alt=""></div>
+                        <h3>Step 3 of 5</h3>
+                        <p>In the modal, enter the recipient's name or department in the <strong>To</strong> field.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging/step4.png" alt=""></div>
+                        <h3>Step 4 of 5</h3>
+                        <p>Provide a <strong>Subject</strong> and write your <strong>Message</strong>.</p>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-placeholder"><img src="img/Updates/SecureMessaging/step5.png" alt=""></div>
+                        <h3>Step 5 of 5</h3>
+                        <p>Click <strong>Send</strong>.</p>
+                    </div>
+                    <button class="prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="next-btn" onclick="moveSlide(1)">&#10095;</button>
+                </div>
+                <div class="slide-indicators">
+                    <span class="dot active" onclick="setSlide(0)"></span>
+                    <span class="dot" onclick="setSlide(1)"></span>
+                    <span class="dot" onclick="setSlide(2)"></span>
+                    <span class="dot" onclick="setSlide(3)"></span>
+                    <span class="dot" onclick="setSlide(4)"></span>
+                    <span class="dot" onclick="setSlide(5)"></span>
+                </div>
+            </div>
+
+            <div id="quick-guide-acknowledgement" style="display:none; margin-top: 15px; text-align: left; font-size: 0.9rem; background: var(--zas-light); padding: 10px; border-radius: 6px;">
+                <input type="checkbox" id="quick-guide-checkbox" onchange="toggleQuickGuideBtn()" />
+                <label for="quick-guide-checkbox" class="custom-checkbox-label">I have read and understood this guide.</label>
+            </div>
+
+            <button class="btn primary" id="quick-guide-close-btn" style="margin-top: 15px;" onclick="document.getElementById('quick-guide-modal').style.display='none'" disabled>Close</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+         <button class="menu-toggle" onclick="toggleSidebar()">></button>
+        <nav class="sidebar">
+            <div class="logo">ZAS <span>Connect</span></div>
+            <ul>
+                <li class="nav-item active" data-page="dashboard">Dashboard</li>
+                <li class="nav-item" data-page="directory">Patient Directory <span class="nav-badge" id="badge-directory">1</span></li>
+                <li class="nav-item" data-page="records">Patient Records <span class="nav-badge" id="badge-records">1</span></li>
+                <li class="nav-item" data-page="messages">Secure Communications <span class="nav-badge" id="badge-messages">1</span></li>
+                <li class="nav-item" data-page="guides">Guides & Help</li>
+            </ul>
+            <div class="user-profile">
+                <p><strong>Dr. Alex Janssens</strong></p>
+                <small>ID: STAFF-99281</small>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- PAGE 1: DASHBOARD -->
+            <section id="dashboard" class="page active">
+                <header>
+                    <h1>Welcome back, Dr. Janssens</h1>
+                    <p>You have 5 patients scheduled for today.</p>
+                </header>
+                <div class="grid">
+                    <div class="card highlight">
+                        <h3>Next Patient</h3>
+                        <p>John Doe - Follow-up</p>
+                        <p><strong>Today, 09:30</strong></p>
+                        <button class="btn">View Profile</button>
+                    </div>
+                    <div class="card">
+                        <h3>Pending Review</h3>
+                        <p>Lab Results - Jane Smith</p>
+                        <span class="status-flag">Action Needed</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 2: PATIENT DIRECTORY -->
+            <section id="directory" class="page">
+                <header>
+                    <h1>Patient Directory</h1>
+                    <p>Search and manage patient profiles.</p>
+                </header>
+                <div class="booking-form">
+                    <label>Search Patient</label>
+                    <input type="text" placeholder="Name, ID, or DoB" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 6px;" />
+                    <button class="btn primary">Search</button>
+                </div>
+                <br>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Ward</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PT-1029</td>
+                            <td>John Doe</td>
+                            <td>Cardiology</td>
+                            <td>Stable</td>
+                            <td><button class="btn-sm">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>PT-8832</td>
+                            <td>Jane Smith</td>
+                            <td>Radiology</td>
+                            <td>Critical</td>
+                            <td><button class="btn-sm">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+          <!-- PAGE 3: PATIENT RECORDS -->
+        <section id="records" class="page">
+            <header>
+                <h1>Patient Records</h1>
+                <button class="btn" id="add-record-btn">+ Update Record</button>
+            </header>
+
+            <!-- Add Record Modal -->
+            <div id="record-modal" style="display:none;">
+                <div class="modal-box">
+                    <h2>Update Patient Record</h2>
+                    <label>Patient ID</label>
+                    <input type="text" id="rec-patient-id" placeholder="e.g. PT-1029" />
+                    <label>Date</label>
+                    <input type="date" id="rec-date" />
+                    <label>Hour</label>
+                    <input type="time" id="rec-hour" />
+                    <label>Type</label>
+                    <select id="rec-type">
+                        <option value="">-- Select type --</option>
+                        <option>Lab Results</option>
+                        <option>X-Ray Image</option>
+                        <option>Prescription</option>
+                        <option>Consultation Notes</option>
+                        <option>Vaccination</option>
+                    </select>
+                    <label>Notes</label>
+                    <textarea id="rec-notes" rows="3" placeholder="Enter clinical notes..."></textarea>
+                    <div class="modal-actions">
+                        <button class="btn secondary" id="rec-cancel">Cancel</button>
+                        <button class="btn primary" id="rec-save">Save Record</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Hour</th>
+                        <th>Patient</th>
+                        <th>Type</th>
+                        <th>Updated By</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="records-tbody">
+                    <!-- Existing records -->
+                    <tr>
+                        <td>03/05/2026</td>
+                        <td>15:00</td>
+                        <td>PT-1029 (John Doe)</td>
+                        <td>Lab Results</td>
+                        <td>Dr. Janssens</td>
+                        <td><button class="btn-sm">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>12/01/2026</td>
+                        <td>13:00</td>
+                        <td>PT-8832 (Jane Smith)</td>
+                        <td>X-Ray Image</td>
+                        <td>Dr. Vogel</td>
+                        <td><button class="btn-sm">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+            <!-- PAGE 4: MESSAGES -->
+            <section id="messages" class="page">
+                <header>
+                    <h1>Secure Messaging</h1>
+                    <p>Exchange data securely with other medical staff or departments.</p>
+                </header>
+
+                <!-- Inbox -->
+                <div id="inbox">
+                    <p id="empty-note">Your inbox is empty. Contact a colleague via the "New Message" button.</p>
+                    <div id="message-list"></div>
+                </div>
+
+                <!-- Compose Modal -->
+                <div id="compose-modal" style="display:none;">
+                    <div class="modal-box">
+                        <h2>New Message</h2>
+                        <label>To</label>
+                        <input type="text" id="msg-to" placeholder="e.g. Dr. Smith" />
+                        <label>Subject</label>
+                        <input type="text" id="msg-subject" placeholder="Subject" />
+                        <label>Message</label>
+                        <textarea id="msg-body" rows="5" placeholder="Write your message..."></textarea>
+                        <div class="modal-actions">
+                            <button class="btn secondary" id="cancel-btn">Cancel</button>
+                            <button class="btn primary" id="send-btn">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn primary" id="new-msg-btn">New Message</button>
+            </section>
+           
+            <!-- PAGE 5: GUIDES & HELP -->
+            <section id="guides" class="page">
+                <header>
+                    <h1>Guides & Help</h1>
+                    <p>Learn how to use the features in ZAS Connect.</p>
+                </header>
+                <div class="grid">
+                    <div class="card" id="guide-directory">
+                        <h3>Updated Patient Directory</h3>
+                        <p>The Patient Directory has been revamped to allow faster searching by Name, ID, or Date of Birth. You can now quickly view the ward and status of each patient directly from the main list. Click 'View' to access full patient details.</p>
+                        <button class="btn secondary" style="margin-top: 10px;" onclick="toggleGuideSteps('guide-directory')">Show Steps</button>
+                        <div class="guide-steps" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                            <ol style="padding-left: 20px; color: var(--text); margin: 0;">
+                                <li>Navigate to the <strong>Patient Directory</strong> from the sidebar.</li>
+                                <li>Click on the <strong>Search Patient</strong> input field.</li>
+                                <li>Type in the patient's Name, ID, or Date of Birth.</li>
+                                <li>Click the <strong>Search</strong> button.</li>
+                                <li>Click <strong>View</strong> on the desired patient row to see full details.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="card" id="guide-records">
+                        <h3>Enhanced Patient Records</h3>
+                        <p>Adding and updating clinical notes is now more intuitive. Ensure you have the patient ID ready. You can specify the type of record (Lab Results, X-Ray, etc.) and add detailed text notes. The unified timeline shows all updates from the care team.</p>
+                        <button class="btn secondary" style="margin-top: 10px;" onclick="toggleGuideSteps('guide-records')">Show Steps</button>
+                        <div class="guide-steps" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                            <ol style="padding-left: 20px; color: var(--text); margin: 0;">
+                                <li>Go to the <strong>Patient Records</strong> section.</li>
+                                <li>Click the <strong>+ Update Record</strong> button at the top right.</li>
+                                <li>Fill in the <strong>Patient ID</strong> (e.g., PT-1029).</li>
+                                <li>Select the <strong>Date</strong>, <strong>Hour</strong>, and <strong>Type</strong>.</li>
+                                <li>Add detailed clinical information in the <strong>Notes</strong> field.</li>
+                                <li>Click <strong>Save Record</strong> to update the patient's timeline.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="card" id="guide-messaging">
+                        <h3>Secure Communications</h3>
+                        <p>Exchange data securely with other medical staff without leaving the portal. Use the 'New Message' button to draft communications to specific doctors or departments. All messages are encrypted and logged for compliance.</p>
+                        <button class="btn secondary" style="margin-top: 10px;" onclick="toggleGuideSteps('guide-messaging')">Show Steps</button>
+                        <div class="guide-steps" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                            <ol style="padding-left: 20px; color: var(--text); margin: 0;">
+                                <li>Open the <strong>Secure Communications</strong> tab.</li>
+                                <li>Click the <strong>New Message</strong> button at the bottom.</li>
+                                <li>In the modal, enter the recipient's name or department in the <strong>To</strong> field.</li>
+                                <li>Provide a <strong>Subject</strong> and write your <strong>Message</strong>.</li>
+                                <li>Click <strong>Send</strong>. The message will appear in your timeline.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+           <!-- Chatbot at the bottom -->
+            <div id="chat-circle" onclick="toggleChat()">
+                <img src="./img/bubble-chat.png" alt="">
+            </div>
+             <section id="chatbot" class="card">
+            <div>
+                <h2>Assistant</h2>
+                <img src="./img/close.png" alt="Close" class="closeImg" onclick="toggleChat()">
+            </div>
+
+            <div id="chat">
+                <div class="msg-welcome">
+                <strong>Hello, how can I help you?</strong>
+                Select a quick action below or type your question.
+                </div>
+            </div>
+
+            <div class="chat-quick">
+                <div class="q-label">Quick actions</div>
+                <div class="q-tabs">
+                <button class="q-tab on" data-tab="reports" onclick="switchTab('reports', this)">Reports</button>
+                <button class="q-tab" data-tab="patient" onclick="switchTab('patient', this)">Patient</button>
+                <button class="q-tab" data-tab="meds" onclick="switchTab('meds', this)">Meds</button>
+                <button class="q-tab" data-tab="admin" onclick="switchTab('admin', this)">Admin</button>
+                </div>
+                <div class="q-grid" id="q-grid"></div>
+            </div>
+
+            <div class="chat-input">
+                <input id="input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') send()" />
+                <button onclick="send()">Send</button>
+            </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
