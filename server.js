@@ -1,10 +1,19 @@
 import express from "express";
 const app = express();
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 app.use(cors());
 
 app.use(express.json());
+
+// Serve static frontend files only during local development
+if (process.env.NODE_ENV !== 'production') {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  app.use(express.static(__dirname));
+}
 
 // 1. Define Intents (Can be moved to a database or config file later)
 const INTENTS = [
