@@ -118,35 +118,44 @@ const INTENTS = [
   },
 ];
 
-app.post("/api/chat", (req, res) => {
-  try {
-    const { message } = req.body;
+// Create a router to handle the API logic
+const apiRouter = express.Router();
 
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({ error: "Invalid message format." });
+// The chat logic now lives on the router, listening for '/chat'
+apiRouter.post("/chat", (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message || typeof message !== "string") {
+            return res.status(400).json({ error: "Invalid message format." });
+        }
+
+        const lowerMsg = message.toLowerCase();
+
+        const match = INTENTS.find(intent =>
+            intent.keywords.some(keyword => lowerMsg.includes(keyword))
+        );
+
+        const reply = match
+            ? match.reply
+            : "I'm sorry, I couldn't find a specific answer. Please contact the ZAS Support Desk at support@zas.be.";
+
+        res.json({
+            success: true,
+            reply,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error("Chat API Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
-    const lowerMsg = message.toLowerCase();
-
-    const match = INTENTS.find(intent =>
-      intent.keywords.some(keyword => lowerMsg.includes(keyword))
-    );
-
-    const reply = match
-      ? match.reply
-      : "I'm sorry, I couldn't find a specific answer. Please contact the ZAS Support Desk at support@zas.be.";
-
-    res.json({
-      success: true,
-      reply,
-      timestamp: new Date().toISOString()
-    });
-
-  } catch (error) {
-    console.error("Chat API Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 });
+
+// Mount the router to handle requests for both local dev and Netlify.
+// This makes the same code work in both environments.
+app.use('/api', apiRouter); // For local dev, handles /api/chat
+app.use('/', apiRouter);    // For Netlify, handles /chat
 
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
