@@ -387,6 +387,20 @@ const ACTIONS = {
       msg: 'Show the clinical protocol',
       tip: { title: 'Clinical protocol', body: "Name the procedure or condition and I'll retrieve the relevant guideline, steps, and contraindications." }},
   ],
+  updates: [
+    { icon: '🆕', label: "What's new",      sub: 'Latest features',
+      msg: "What's new in the latest update?",
+      tip: { title: "What's new", body: "I'll walk you through the most recent features and improvements added to the platform." }},
+    { icon: '📖', label: 'How-to guide',    sub: 'Feature walkthroughs',
+      msg: 'Show me how to use a feature',
+      tip: { title: 'How-to guide', body: "Tell me which feature you'd like to learn and I'll give you a step-by-step walkthrough." }},
+    { icon: '📜', label: 'Release notes',   sub: 'Full changelog',
+      msg: 'Show the full release notes',
+      tip: { title: 'Release notes', body: "I'll display the complete changelog with version history, bug fixes, and improvements." }},
+    { icon: '💡', label: 'Tips & shortcuts', sub: 'Work faster',
+      msg: 'Show me tips and shortcuts',
+      tip: { title: 'Tips & shortcuts', body: "I'll share the most useful shortcuts and hidden features to help you get the most out of the platform." }},
+  ],
 };
 
 function renderGrid(tab) {

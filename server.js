@@ -98,6 +98,24 @@ const INTENTS = [
     keywords: ["medical record", "emr", "ehr", "electronic record"],
     reply: "Electronic Medical Records (EMR) can be accessed via the 'Medical Records' tab. Ensure you have the correct authorization level before accessing patient files."
   },
+
+  // ── Updates ──
+  {
+    keywords: ["what's new", "new features", "latest update", "recent update", "new in"],
+    reply: "To see the latest features, open 'Updates' → 'What's New'. Each release is summarised with a short description and a link to the full details."
+  },
+  {
+    keywords: ["how to", "how do i", "walkthrough", "guide", "tutorial", "how to use"],
+    reply: "Step-by-step how-to guides are available in 'Updates' → 'How-To Guides'. Search by feature name or browse by category to find the walkthrough you need."
+  },
+  {
+    keywords: ["release notes", "changelog", "version history", "patch notes"],
+    reply: "The full changelog is in 'Updates' → 'Release Notes'. Each entry lists the version number, date, new features, improvements, and bug fixes."
+  },
+  {
+    keywords: ["tips", "shortcuts", "productivity", "tricks", "hidden features"],
+    reply: "Useful tips and keyboard shortcuts are listed in 'Updates' → 'Tips & Shortcuts'. They are grouped by module so you can quickly find relevant ones for your workflow."
+  },
 ];
 
 app.post("/api/chat", (req, res) => {
