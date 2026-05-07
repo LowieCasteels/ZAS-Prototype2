@@ -6,8 +6,6 @@ app.use(cors());
 
 app.use(express.json());
 
-
-
 // 1. Define Intents (Can be moved to a database or config file later)
 const INTENTS = [
   // ── Reports ──
