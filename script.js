@@ -446,7 +446,7 @@ function selectAction(tab, i) {
   document.getElementById('input').value = a.msg;
 }
 
-async function sendMsg(text) {
+function sendMsg(text) { // No longer needs to be async
   if (!text.trim()) return;
   clearTip();
   const chat = document.getElementById('chat');
@@ -454,19 +454,30 @@ async function sendMsg(text) {
 
   chat.innerHTML += `<div class="msg-user">${text}</div>`;
   chat.scrollTop = chat.scrollHeight;
-
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text })
-    });
-    const data = await res.json();
-    chat.innerHTML += `<div class="msg-bot">${data.reply}</div>`;
-  } catch {
-    chat.innerHTML += `<div class="msg-bot" style="color:#c0392b">Server unavailable. Please try again.</div>`;
-  }
+  
+  // Add a "thinking" indicator
+  const thinkingBubble = document.createElement('div');
+  thinkingBubble.className = 'msg-bot';
+  thinkingBubble.innerHTML = '...';
+  chat.appendChild(thinkingBubble);
   chat.scrollTop = chat.scrollHeight;
+
+  // Simulate a server delay and process the logic locally
+  setTimeout(() => {
+    const lowerMsg = text.toLowerCase();
+
+    const match = INTENTS.find(intent =>
+        intent.keywords.some(keyword => lowerMsg.includes(keyword))
+    );
+
+    const reply = match
+        ? match.reply
+        : "I'm sorry, I couldn't find a specific answer. Please contact the ZAS Support Desk at support@zas.be.";
+
+    // Update the "thinking" bubble with the actual reply
+    thinkingBubble.innerHTML = reply;
+    chat.scrollTop = chat.scrollHeight;
+  }, 600); // 600ms delay for a more realistic feel
 }
 
 function send() {
