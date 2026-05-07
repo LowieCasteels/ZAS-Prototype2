@@ -330,6 +330,108 @@ function openGuide(guideId) {
     }, 100);
 }
 
+const INTENTS = [
+  // ── Reports ──
+  {
+    keywords: ["patient report", "daily report", "daily summary"],
+    reply: "To generate a patient daily report, go to the 'Reports' module and select 'Daily Patient Summary'. Enter the patient ID or name and choose the date range."
+  },
+  {
+    keywords: ["shift handover", "handover report", "end of shift"],
+    reply: "For shift handover notes, open the 'Reports' module → 'Shift Handover'. Fill in the ward name, list critical patients, and add any pending tasks before submitting."
+  },
+  {
+    keywords: ["ward stats", "ward statistics", "occupancy", "kpi"],
+    reply: "Ward statistics are available in 'Reports' → 'Ward Dashboard'. You can filter by ward and date range to view bed occupancy, average length of stay, and admission/discharge counts."
+  },
+  {
+    keywords: ["incident", "incident report", "log event", "log an event"],
+    reply: "To file an incident report, go to 'Reports' → 'Incident Reporting'. Describe the event, time, persons involved, actions taken, and required follow-up steps."
+  },
+
+  // ── Patient ──
+  {
+    keywords: ["admit", "admission", "new patient", "register"],
+    reply: "To register a new patient, navigate to the 'Admission' module and select 'Register New Patient'. You will need their full name, date of birth, and reason for admission."
+  },
+  {
+    keywords: ["schedule exam", "book appointment", "appointment", "examination"],
+    reply: "To schedule an exam, open 'Patient' → 'Appointments' and click 'New Booking'. Select the exam type, preferred date, and link it to the patient ID."
+  },
+  {
+    keywords: ["care plan", "care objective", "intervention"],
+    reply: "Care plans are managed in 'Patient' → 'Care Plan'. Search by patient ID or name to view the current plan, or click 'Add Objective' to update it."
+  },
+  {
+    keywords: ["discharge", "discharge summary", "discharge patient"],
+    reply: "To discharge a patient, go to 'Patient' → 'Discharge'. The system will compile the diagnosis, treatments, medications prescribed, and follow-up instructions automatically."
+  },
+
+  // ── Medications ──
+  {
+    keywords: ["medication round", "medication", "administration", "pending meds"],
+    reply: "Pending medication rounds are listed in 'Meds' → 'Administration Schedule'. Filter by ward or patient to see due times and exact doses."
+  },
+  {
+    keywords: ["drug", "dosage", "interaction", "contraindication"],
+    reply: "Use the drug lookup in 'Meds' → 'Drug Reference'. Enter the drug name to view standard dosages, contraindications, and interactions with common medications."
+  },
+  {
+    keywords: ["overdue", "missed dose", "late medication"],
+    reply: "Overdue doses are flagged in 'Meds' → 'Alerts'. Select your ward to filter the list. Critical missed doses are highlighted in red."
+  },
+  {
+    keywords: ["prescription", "prescribe", "renew prescription"],
+    reply: "To write or renew a prescription, go to 'Meds' → 'Prescriptions' and click 'New Prescription'. Enter the drug name, indication, dosage, and frequency."
+  },
+
+  // ── Admin ──
+  {
+    keywords: ["staff schedule", "rota", "shift", "who is working"],
+    reply: "The staff schedule is available in 'Admin' → 'Rota'. You can filter by ward or role (nurses, doctors) and switch between daily and weekly views."
+  },
+  {
+    keywords: ["bed", "available bed", "bed availability", "capacity"],
+    reply: "Current bed availability is shown in 'Admin' → 'Bed Management'. Beds pending cleaning or maintenance are flagged separately."
+  },
+  {
+    keywords: ["billing", "billing code", "icd", "ccam", "procedure code"],
+    reply: "To find billing codes, open 'Admin' → 'Billing Codes'. Search by diagnosis or procedure name to get the matching ICD-10 or CCAM code."
+  },
+  {
+    keywords: ["protocol", "guideline", "clinical protocol", "procedure guideline"],
+    reply: "Clinical protocols are stored in 'Admin' → 'Guidelines'. Search by condition or procedure name to retrieve the relevant steps and contraindications."
+  },
+
+  // ── IT / Access ──
+  {
+    keywords: ["password", "login", "access", "account"],
+    reply: "Password resets must be requested via the ZAS IT Portal or by calling the internal helpdesk at ext. 555."
+  },
+  {
+    keywords: ["medical record", "emr", "ehr", "electronic record"],
+    reply: "Electronic Medical Records (EMR) can be accessed via the 'Medical Records' tab. Ensure you have the correct authorization level before accessing patient files."
+  },
+
+  // ── Updates ──
+  {
+    keywords: ["what's new", "new features", "latest update", "recent update", "new in"],
+    reply: "To see the latest features, open 'Updates' → 'What's New'. Each release is summarised with a short description and a link to the full details."
+  },
+  {
+    keywords: ["how to", "how do i", "walkthrough", "guide", "tutorial", "how to use"],
+    reply: "Step-by-step how-to guides are available in 'Updates' → 'How-To Guides'. Search by feature name or browse by category to find the walkthrough you need."
+  },
+  {
+    keywords: ["release notes", "changelog", "version history", "patch notes"],
+    reply: "The full changelog is in 'Updates' → 'Release Notes'. Each entry lists the version number, date, new features, improvements, and bug fixes."
+  },
+  {
+    keywords: ["tips", "shortcuts", "productivity", "tricks", "hidden features"],
+    reply: "Useful tips and keyboard shortcuts are listed in 'Updates' → 'Tips & Shortcuts'. They are grouped by module so you can quickly find relevant ones for your workflow."
+  },
+];
+
 const ACTIONS = {
   reports: [
     { icon: '📋', label: 'Patient report',   sub: 'Daily summary',
