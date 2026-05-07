@@ -200,6 +200,14 @@ header {
 
 .guide-steps li { margin-bottom: 8px; line-height: 1.4; }
 
+/* Styling for images within the guide steps */
+.guide-steps img {
+    max-width: 100%; /* Ensure image does not exceed parent width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove extra space below image */
+    margin-bottom: 10px; /* Add some spacing below the image */
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
